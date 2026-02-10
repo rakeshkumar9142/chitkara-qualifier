@@ -96,7 +96,7 @@ app.post("/bfhl", async (req, res) => {
 
 async function askAI(question) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
   
       const response = await axios.post(
         url,
@@ -104,34 +104,27 @@ async function askAI(question) {
           contents: [
             {
               parts: [
-                { text: question }
+                { text: `Answer in only one word: ${question}` }
               ]
             }
           ]
         },
         {
-          headers: {
-            "Content-Type": "application/json"
-          },
-          timeout: 8000
+          headers: { "Content-Type": "application/json" }
         }
       );
   
       const text =
         response.data.candidates[0].content.parts[0].text;
   
-      
-      return text.trim().split(/\s+/)[0];
+      return text.trim();
   
     } catch (error) {
-      console.error(error.response?.data || error.message);
+      console.error(JSON.stringify(error.response?.data, null, 2));
       throw new Error("AI service unavailable");
     }
   }
   
-  
-  
-
 
 
 
